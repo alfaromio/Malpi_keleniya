@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="WhoPaidForGivenMonth" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3517284d-03e6-4e1b-940a-3fe1ab39acad">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="style1">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{paymentsStatus}=="Not Paid"]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="course_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="month" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="amount" class="java.lang.Double">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="precentage" class="java.lang.Double">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="year" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LecturerName" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT distinct cs.s_id,p.month,p.amount,(select student.s_name from student where student.s_id = cs.s_id) as name FROM `student-course` cs left join payments p on cs.s_id=p.s_id and p.month=$P{month} and p.year=$P{year} where cs.course_id=$P{course_id}]]>
+	</queryString>
+	<field name="s_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="month" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="amount" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="paymentsStatus" class="java.lang.String">
+		<variableExpression><![CDATA[$F{month}==null ? 'Not Paid' : 'Paid']]></variableExpression>
+	</variable>
+	<variable name="currentTotalIncome" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$V{paymentsStatus}=='Paid' ? $P{amount} : 0.00]]></variableExpression>
+	</variable>
+	<variable name="LecturerIncome" class="java.lang.Double">
+		<variableExpression><![CDATA[$V{LecturerIncome}*$P{precentage}]]></variableExpression>
+	</variable>
+	<variable name="amount_SUM" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+	</variable>
+	<variable name="ExpectedPayment" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$P{amount}]]></variableExpression>
+	</variable>
+	<variable name="numberOfRecods" class="java.lang.Integer" incrementType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$V{numberOfRecods}+1]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="217" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="74" width="555" height="45" forecolor="#0033FF" uuid="d3ff6a52-c2f8-4007-96fd-a08b6dff0489"/>
+				<textElement textAlignment="Center">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Course Payment Status Monthly Report]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="119" width="85" height="20" uuid="4a43a7da-4077-42d6-8ed4-6275e390e3b6"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lecturer Name   :         ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="139" width="85" height="20" uuid="0feae7fa-d24d-45db-8592-01a4a88ac000"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Course ID           :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="341" y="119" width="100" height="20" uuid="52280a71-7f4b-4ffb-869c-c4bf6bcc5b3f"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payment Month :  ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="341" y="139" width="100" height="20" uuid="679132b9-d513-4c0b-ba40-32ae348d37fa"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Genarated Date :  ]]></text>
+			</staticText>
+			<textField pattern="yyyy.MMMMM.dd GGG hh:mm aaa">
+				<reportElement x="441" y="139" width="114" height="20" uuid="b0d2d281-457b-45d8-a84d-f875bf5f9c34"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="441" y="119" width="114" height="20" uuid="6c7e646e-8fad-445c-8d69-8e841ca9f008"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{month}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="99" y="119" width="150" height="20" uuid="1bd12bff-501e-4134-bccb-301c043a68b6"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{LecturerName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="99" y="139" width="242" height="20" uuid="b051070f-6916-482f-8d6a-d8d3cc5ef424"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{course_id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="341" y="179" width="100" height="20" uuid="e0bc8c3d-ac9a-429f-9769-1e988756e4f1"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Current Income  :  ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="376" y="2" width="179" height="20" uuid="9fe8e7d5-645e-4c78-a9f8-a8882229a613"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[4/1/A , Broadway, Kawdana, Dehiwala]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="109" y="2" width="239" height="20" forecolor="#0033CC" uuid="2e040899-2eac-45cf-b931-3b6e25e545b6"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INSTITUTE OF PROFESSIONAL STUDIES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="376" y="42" width="179" height="20" uuid="cdd0a007-1ede-4a85-bd9c-663bb5c4240e"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ipssrilanka1@gmail.com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="109" y="22" width="100" height="20" forecolor="#0033CC" uuid="0349507c-2540-467c-a268-c6c0138dee9f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mount Lavinia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="376" y="22" width="179" height="20" uuid="d757ed4b-36f2-4d15-a426-720b87fa1c7c"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[+940112727263 / + 940112718162]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="341" y="159" width="100" height="20" uuid="c6f71985-1cab-449a-8a46-354810acfe8d"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Expect Income :  ]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement x="441" y="179" width="114" height="20" uuid="9f760c64-0118-42b5-bb13-0ffcf920a257"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{currentTotalIncome}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="441" y="159" width="114" height="20" uuid="9f99eba2-e7ba-4cdb-84e6-316d5b8ca770"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{ExpectedPayment}]]></textFieldExpression>
+			</textField>
+			<image onErrorType="Icon">
+				<reportElement x="0" y="0" width="109" height="74" uuid="0823fd09-25d5-4571-a6b5-9dde4887f39b"/>
+				<imageExpression><![CDATA["ipslogo.jpg"]]></imageExpression>
+			</image>
+			<textField evaluationTime="Report">
+				<reportElement x="100" y="159" width="93" height="40" forecolor="#0033FF" uuid="53c365f7-4281-40c5-a27f-b55d385372e0"/>
+				<textElement verticalAlignment="Top">
+					<font size="24" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="15" y="169" width="84" height="20" uuid="2200ba47-72c8-4fc8-af0a-e73caf4133b5"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Records     :]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="3" width="100" height="20" uuid="d35f8645-7e75-40be-84f2-563225808bc5"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Student ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="335" y="3" width="100" height="20" uuid="a035fe5f-aff9-4c6c-a0af-27035a0a55dd"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Course Fee]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="441" y="3" width="100" height="20" uuid="fd6590b8-5449-4ce5-9f54-5734ce2ded6f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payment Status]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="23" width="555" height="1" uuid="c8dc225a-a8ea-4761-afed-035d7d0b49fe"/>
+			</line>
+			<staticText>
+				<reportElement x="147" y="3" width="80" height="20" uuid="f5d8cd13-b9a4-4f75-a718-6c1782a149e3"/>
+				<text><![CDATA[name]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement style="style1" x="441" y="0" width="100" height="20" uuid="7bda170f-78e7-4cfe-b76b-7b34e26765c3"/>
+				<textFieldExpression><![CDATA[$V{paymentsStatus}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="77" height="20" uuid="0e76ef1a-6a48-4512-8ceb-4cca89c22f59"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{s_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="335" y="0" width="100" height="20" uuid="b1f504f4-3d6a-4966-b85b-b7165f2a1e52"/>
+				<textFieldExpression><![CDATA[$P{amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="225" height="20" uuid="1ebc0f2e-bafb-4622-b159-3e868c1e5d95"/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="37" splitType="Stretch"/>
+	</columnFooter>
+</jasperReport>

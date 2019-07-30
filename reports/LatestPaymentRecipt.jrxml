@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="LatestPaymentRecipt" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e529bb86-40ca-411a-acfe-dbaf9419729b">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="bill_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select pbd.*,(select s_name from student where s_id = pbd.s_id )s_name from payment_bill_details pbd where pbd.bill_id=$P{bill_id}]]>
+	</queryString>
+	<field name="line_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="bill_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="course_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="bill_amount" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="payment_month" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="comments" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="s_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="card_type" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="created_time" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="issued_by" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="s_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="170" splitType="Stretch">
+			<rectangle>
+				<reportElement x="91" y="0" width="374" height="170" uuid="f913b21b-7b6d-4ffd-9192-aebb10a3a024"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="105" y="97" width="342" height="61" uuid="bc411976-867a-46eb-ba0e-d5cfd6a5065d"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="175" y="68" width="200" height="27" forecolor="#0033FF" uuid="d04c8748-4860-40ff-8c53-75f53e85642e"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payment Receipt]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="105" y="107" width="68" height="20" uuid="84c231fd-78e8-483e-84fe-9cd0064c2add"/>
+				<text><![CDATA[Student ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="105" y="127" width="68" height="20" uuid="a4195a4a-b5a2-4811-9beb-a723d6e36802"/>
+				<text><![CDATA[Student Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="281" y="107" width="58" height="20" uuid="c85e1ac4-8bb7-43ac-83e7-7e94f2def449"/>
+				<text><![CDATA[Bill Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="281" y="127" width="58" height="20" uuid="aefa8df1-2ae3-4ffb-845b-bd9e1919ecf4"/>
+				<text><![CDATA[Issued By]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="347" y="107" width="100" height="20" uuid="8348c44e-ca2f-4c3d-903e-584a00994795"/>
+				<textFieldExpression><![CDATA[$F{created_time}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="181" y="107" width="100" height="20" uuid="3442043b-534e-42af-a7dd-5e05f343097d"/>
+				<textFieldExpression><![CDATA[$F{s_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="347" y="127" width="100" height="20" uuid="c33c589f-c3a7-499e-938b-b9c71da599b5"/>
+				<textFieldExpression><![CDATA[$F{issued_by}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="181" y="127" width="100" height="20" uuid="d9b818f8-4855-4af4-8d5e-ce4298d6d326"/>
+				<textFieldExpression><![CDATA[$F{s_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="339" y="127" width="8" height="20" uuid="9c475e2d-ecfb-4800-9c23-f5fc5df0198a"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="339" y="107" width="8" height="20" uuid="696575a5-8b71-414f-86fd-74c9c5df9faa"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="173" y="107" width="8" height="20" uuid="a86155dc-f57a-45eb-a445-8ec50f1a2032"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="173" y="127" width="8" height="20" uuid="0d2cf93f-d2fb-4adf-b196-d3c9644b8948"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="159" y="2" width="230" height="65" uuid="e8a2cabd-2127-4224-bebe-233e056a458a"/>
+				<imageExpression><![CDATA["logo2.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<detail>
+		<band height="103" splitType="Stretch">
+			<textField>
+				<reportElement x="247" y="54" width="78" height="20" uuid="bcf723c4-cfe8-4123-8565-f2cb4ae93e08"/>
+				<textFieldExpression><![CDATA[$F{payment_month}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="247" y="74" width="75" height="20" uuid="dabace10-f05d-4e62-af37-9fe105c382c9"/>
+				<textFieldExpression><![CDATA[$F{bill_amount}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="115" y="14" width="100" height="20" uuid="6c4bc8c9-1072-441e-a9f2-b1bd128e8aae"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[course_id]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="115" y="34" width="100" height="20" uuid="f31a498d-bbd0-4924-b3d5-47ae536ea38f"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[Card Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="115" y="54" width="100" height="20" uuid="a9f8c14d-83c8-462a-86d8-2bb7a9fe365d"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[Month]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="115" y="74" width="100" height="20" uuid="871445dc-e361-4c19-a6db-1f1791700b12"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="215" y="14" width="23" height="20" uuid="d8f38045-a942-44d6-a2b1-9cabac731439"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="215" y="74" width="23" height="20" uuid="c9977a2f-0cd6-4492-aeff-c01dc6153f03"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="215" y="34" width="23" height="20" uuid="89af1921-26be-4c17-ac69-4af09bc58b79"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="215" y="54" width="23" height="20" uuid="ebf2fb9f-e411-4c44-99ef-b507d1d2fbc1"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="247" y="14" width="218" height="20" uuid="d4bc3d76-dd0a-4a2f-9b3b-870bf13ffc96"/>
+				<textFieldExpression><![CDATA[$F{course_id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="91" y="0" width="374" height="103" uuid="c52ac311-eb91-43ea-9bec-cd51a8666bb3"/>
+				<box>
+					<pen lineWidth="0.75" lineStyle="Solid"/>
+					<topPen lineWidth="0.75" lineStyle="Solid"/>
+					<leftPen lineWidth="0.75" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
+					<rightPen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="247" y="34" width="156" height="20" uuid="5deaafde-17f9-431e-a5e0-fcef4b5b6457"/>
+				<textFieldExpression><![CDATA[$F{card_type}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

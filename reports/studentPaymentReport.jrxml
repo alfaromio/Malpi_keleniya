@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="studentPaymentReport" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="57664e6d-514a-4b5e-982e-2f0a3a659c3d">
+	<property name="ireport.zoom" value="1.0000000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="13"/>
+	<parameter name="toDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fromDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="course" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="regID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="s_name" class="java.lang.String"/>
+	<parameter name="l_name" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select year,month,date,amount,(select lec.name from lecturer lec,course co where co.lecturer_id = lec.id and co.course_id=$P{course})as l_name from payments where course_id = $P{course} and s_id = $P{regID} And
+(date between STR_TO_DATE($P{fromDate}, '%Y-%m-%d') and STR_TO_DATE($P{toDate}, '%Y-%m-%d')) order by date DESC]]>
+	</queryString>
+	<field name="year" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="month" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="amount" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="l_name" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="130" splitType="Stretch">
+			<textField>
+				<reportElement x="455" y="80" width="100" height="20" uuid="b829cb33-f787-4f20-ad63-305263d510b2"/>
+				<textFieldExpression><![CDATA[$P{fromDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="60" width="100" height="20" uuid="7841695f-0541-4ac1-9a27-e26d614bcee2"/>
+				<textFieldExpression><![CDATA[$P{toDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="440" y="61" width="13" height="20" uuid="faa8a1fc-50da-4f21-bb39-e17e39fa9949"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="61" width="78" height="20" uuid="d58e451a-3091-4491-bb36-758fbe31a342"/>
+				<text><![CDATA[Student Name ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="80" width="13" height="20" uuid="76c226a0-16ee-4bce-9fb8-b99b85f9bf44"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="80" width="78" height="20" uuid="b2f893a4-00a8-4ec7-b227-6ca21d985347"/>
+				<text><![CDATA[Course ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="402" y="80" width="38" height="20" uuid="f54c9d33-4a1d-4afd-9355-f5dd5fec452c"/>
+				<text><![CDATA[To ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="61" width="13" height="20" uuid="8910d78d-5889-4101-9d91-8b18926b6d04"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="80" width="13" height="20" uuid="f219bc0b-c10a-4d5a-8151-3035be448d67"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="402" y="61" width="38" height="20" uuid="1a69e883-0f6b-4a36-be9f-9a08310aa2fa"/>
+				<text><![CDATA[From ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="92" y="81" width="310" height="20" uuid="005bc955-1d8d-46c7-a587-9edb9d0e2765"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{course}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="36" forecolor="#0000FF" uuid="6f6b6801-39ec-4a53-beaa-c5241b0ba040"/>
+				<textElement textAlignment="Center">
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Student Payment History Report]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="99" width="78" height="20" uuid="c50722ca-5d8f-4efd-9619-b296820d9d7e"/>
+				<text><![CDATA[Lecturer Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="99" width="13" height="20" uuid="5ae66636-622d-4aee-9fcc-baeba4363fe0"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="92" y="61" width="254" height="20" uuid="84ea5bc9-445b-4269-a60a-75574bd4ee21"/>
+				<textFieldExpression><![CDATA[$P{s_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="92" y="99" width="254" height="20" uuid="d867fa3b-198d-4bff-847d-f68e5924da53"/>
+				<textFieldExpression><![CDATA[$F{l_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="7e12316b-0d03-4953-83f8-4684d61f4776"/>
+				<text><![CDATA[Payment Year]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="141" y="0" width="100" height="20" uuid="7ee63a02-a904-4284-9844-4e7edcab35c9"/>
+				<text><![CDATA[Payment Month]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="314" y="1" width="100" height="20" uuid="99dc650b-5a96-41bc-b26f-8e02b37dea03"/>
+				<text><![CDATA[Paid Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="453" y="0" width="100" height="20" uuid="2e2df583-5a6b-4162-8125-8463c13f0250"/>
+				<text><![CDATA[Paid Amount]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="20" width="555" height="1" uuid="1cd0a9e9-a775-4aed-948f-0053ff882833"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="b65268d4-1632-447c-b98d-1fff3dc07dfd"/>
+				<textFieldExpression><![CDATA[$F{year}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="141" y="0" width="100" height="20" uuid="b6edc2b8-9690-4089-a2ff-e593a4bf952b"/>
+				<textFieldExpression><![CDATA[$F{month}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="314" y="1" width="100" height="20" uuid="a9ba6270-8d4f-4470-a8d2-b8d2614ef36c"/>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="453" y="1" width="100" height="20" uuid="60ced7df-755e-413c-9365-06c882c1e487"/>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

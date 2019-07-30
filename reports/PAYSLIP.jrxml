@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PAYSLIP" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="74474feb-2c37-4bb4-af91-189789bc6988">
+	<property name="ireport.zoom" value="1.1"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="2f2e7083-382d-4564-8033-28e61b53504e"/>
+	<parameter name="selected_date" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lec_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select a.course_id,a.monthly_fee,a.lecturer_payment_precentage,a.fee_for_this_month,(a.fee_for_this_month*a.lecturer_payment_precentage/100)actual_fee_for_this_month,a.fee_from_past_month,(a.fee_from_past_month*a.lecturer_payment_precentage/100)actual_fee_from_past_month,(a.fee_for_this_month+a.fee_from_past_month) total_income,((a.fee_for_this_month*a.lecturer_payment_precentage/100)+(a.fee_from_past_month*a.lecturer_payment_precentage/100))actual_total_income,a.monthly_fee*a.student_count expected_income ,(a.monthly_fee*a.student_count*lecturer_payment_precentage/100)actual_expected_income, a.student_count,a.unsettle_advance_payments,a.settle_advance_payments_this_month from
+
+(select course_id,
+monthly_fee,lecturer_payment_precentage,
+(select ifnull(sum(amount),0.00)  from advance_payments where status='ACTIVE' and lec_id = 22)as unsettle_advance_payments,
+(select ifnull(sum(amount),0.00)  from advance_payments where status='DEACTIVE' and lec_id = 22 and settled_payment_month = LOWER(monthname(STR_TO_DATE('2017-06-10','%Y-%m-%d'))))as settle_advance_payments_this_month,
+IFNULL((select sum(amount) from payments p where p.course_id=c.course_id and
+month = LOWER(monthname(STR_TO_DATE('2017-06-10','%Y-%m-%d'))) and
+LOWER(monthname(STR_TO_DATE('2017-06-10','%Y-%m-%d')))=LOWER(monthname(STR_TO_DATE(p.date,'%Y-%m-%d'))) and
+YEAR=(YEAR(STR_TO_DATE('2017-06-10','%Y-%m-%d'))) and
+LOWER(year(STR_TO_DATE('2017-06-10','%Y-%m-%d')))=LOWER(year(STR_TO_DATE(p.date ,'%Y-%m-%d')))),0.00) fee_for_this_month,
+
+IFNULL((select sum(amount) from payments p where p.course_id=c.course_id and
+month != LOWER(monthname(STR_TO_DATE('2017-06-10','%Y-%m-%d'))) and
+LOWER(monthname(STR_TO_DATE('2017-06-10','%Y-%m-%d')))=LOWER(monthname(STR_TO_DATE(p.date ,'%Y-%m-%d'))) and
+/*YEAR =(YEAR(STR_TO_DATE('2017-06-10','%Y-%m-%d'))) and  'payment for' year may or may not equal with 'paymentdoneyear'*/
+LOWER(year(STR_TO_DATE('2017-06-10','%Y-%m-%d')))=LOWER(year(STR_TO_DATE(p.date ,'%Y-%m-%d')))),0.00) fee_from_past_month,
+(select count(s_id) from `student-course` where course_id = c.course_id and registation_date <=STR_TO_DATE('2017-07-28','%Y-%m-%d')) 'student_count'
+from course c where lecturer_id = 22)a;]]>
+	</queryString>
+	<field name="course_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="monthly_fee" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="lecturer_payment_precentage" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fee_for_this_month" class="java.lang.Double"/>
+	<field name="actual_fee_for_this_month" class="java.lang.Double"/>
+	<field name="fee_from_past_month" class="java.lang.Double"/>
+	<field name="actual_fee_from_past_month" class="java.lang.Double"/>
+	<field name="total_income" class="java.lang.Double"/>
+	<field name="actual_total_income" class="java.lang.Double"/>
+	<field name="expected_income" class="java.lang.Double"/>
+	<field name="actual_expected_income" class="java.lang.Double"/>
+	<field name="student_count" class="java.lang.Long"/>
+	<field name="unsettle_advance_payments" class="java.lang.Double"/>
+	<field name="settle_advance_payments_this_month" class="java.lang.Double"/>
+	<variable name="total_income_this_month" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{fee_for_this_month}]]></variableExpression>
+		<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+	</variable>
+	<variable name="past_total_imcome" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{fee_from_past_month}]]></variableExpression>
+		<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+	</variable>
+	<variable name="total_income" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_income}]]></variableExpression>
+		<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+	</variable>
+	<variable name="Expected Total Income" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{expected_income}]]></variableExpression>
+		<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+	</variable>
+	<variable name="actual_total_income_this_month" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{actual_fee_for_this_month}]]></variableExpression>
+		<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+	</variable>
+	<variable name="actual_past_total_imcome" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{actual_fee_from_past_month}]]></variableExpression>
+		<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+	</variable>
+	<variable name="actual_total_income" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{actual_total_income}]]></variableExpression>
+		<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+	</variable>
+	<variable name="actual_Expected Total Income" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{actual_expected_income}]]></variableExpression>
+		<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+	</variable>
+	<variable name="Final Amount" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{actual_total_income}-$F{settle_advance_payments_this_month}]]></variableExpression>
+	</variable>
+	<group name="course_group">
+		<groupExpression><![CDATA[$F{course_id}]]></groupExpression>
+		<groupHeader>
+			<band height="26">
+				<rectangle>
+					<reportElement x="0" y="2" width="555" height="20" forecolor="#CCCCFF" backcolor="#CCCCFF" uuid="b3fb3bcb-3c1a-4c09-baef-a72d7d4b9007"/>
+				</rectangle>
+				<textField>
+					<reportElement x="50" y="2" width="298" height="20" uuid="18e24996-eb2c-4730-8eb9-ee5271a10286"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Cambria" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{course_id}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="364" y="2" width="100" height="20" uuid="ce061303-6c12-424b-a007-74461cb4656e"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Cambria" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Course Fee :]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="464" y="2" width="91" height="20" uuid="6391c51b-6538-46b7-b9d0-9782bdd94236"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Cambria" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{monthly_fee}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="394" splitType="Stretch">
+			<staticText>
+				<reportElement x="109" y="7" width="239" height="20" forecolor="#0033CC" uuid="4a929f4e-341f-4543-b9e9-9da88c8b402d"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INSTITUTE OF PROFESSIONAL STUDIES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="376" y="7" width="179" height="20" uuid="acab97e0-8dc5-4b94-b23f-054f0dcfe97f"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[4/1/A , Broadway, Kawdana, Dehiwala]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="376" y="47" width="179" height="20" uuid="67283f40-b913-4b80-9579-a3152f316625"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ipssrilanka1@gmail.com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="109" y="27" width="100" height="20" forecolor="#0033CC" uuid="7276e410-b4d5-4696-a954-f36042a06d44"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mount Lavinia]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="5" width="109" height="74" uuid="a681d7b1-4178-49ee-8806-cc735e3b2a20"/>
+				<imageExpression><![CDATA["ipslogo.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="376" y="27" width="179" height="20" uuid="3054b7b3-ebeb-4113-ba7b-89c05790959f"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[+940112727263 / + 940112718162]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="34" y="135" width="105" height="20" uuid="13712ccc-949c-4a08-8ecc-546694bd3add"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Fee For This Month]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="34" y="155" width="105" height="20" uuid="c6ac1aaa-ffb8-47bf-b3ac-7a5e6234b3a2"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Fee For Past Months]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="34" y="175" width="105" height="20" uuid="35d479a9-4f3e-48d1-b1bb-d424fb8f937c"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Total Income]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="34" y="195" width="105" height="20" uuid="b3f39e52-7f24-400b-a027-1100d17c59ad"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Expected Total Income]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="333" y="135" width="125" height="20" uuid="3432b091-a2c7-4675-a781-c5566f2556ee"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Fee For This Month]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="333" y="155" width="125" height="20" uuid="73d2c74a-fdbe-47f0-bd97-8a604e96a2bc"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Fee For Past Months]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="333" y="195" width="125" height="20" uuid="3eadc535-06b0-413c-b889-9b400d791d8f"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Expected Total Income]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="333" y="175" width="125" height="20" uuid="355ce2ba-e766-47a0-a47a-55ad6df3c175"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Total Income]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="237" width="139" height="20" uuid="7465219c-ebd8-4b17-aeef-1bce394ec1f4"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Unsettle Advance Payments]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="256" width="125" height="20" uuid="c3216b7c-15fa-4776-a304-d3a4672210d5"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Settle Advance Payments]]></text>
+			</staticText>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="157" y="237" width="52" height="20" uuid="d37b5f9e-fa64-4e6c-bb67-86183e6409d2"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{unsettle_advance_payments}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="157" y="256" width="52" height="20" uuid="b72be2df-ae52-454d-ab65-c701817412af"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{settle_advance_payments_this_month}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.00;-#,##0.00">
+				<reportElement x="156" y="135" width="53" height="20" uuid="fefd914a-a5b3-4acb-bd58-6c559a985e40"/>
+				<textElement textAlignment="Right">
+					<font isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_income_this_month}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.00;-#,##0.00">
+				<reportElement x="156" y="155" width="53" height="20" uuid="aecdcff3-49c5-46f0-850a-78f25a43cfcc"/>
+				<textElement textAlignment="Right">
+					<font isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{past_total_imcome}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.00;-#,##0.00">
+				<reportElement x="156" y="175" width="53" height="20" uuid="f18d8b66-f9a0-4c5b-bc36-d8358ea938dc"/>
+				<textElement textAlignment="Right">
+					<font isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_income}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.00;-#,##0.00">
+				<reportElement x="156" y="195" width="53" height="20" uuid="cade4b4b-6db7-4942-914f-57fe4986a8d2"/>
+				<textElement textAlignment="Right">
+					<font isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Expected Total Income}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.00;-#,##0.00">
+				<reportElement x="475" y="135" width="56" height="20" uuid="8f40b5eb-db63-43bb-8e18-fd635e302d9a"/>
+				<textElement textAlignment="Right">
+					<font isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{actual_total_income_this_month}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.00;-#,##0.00">
+				<reportElement x="475" y="155" width="56" height="20" uuid="15491221-f5ab-44d9-bd7d-0156c9878000"/>
+				<textElement textAlignment="Right">
+					<font isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{actual_past_total_imcome}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.00;-#,##0.00">
+				<reportElement x="475" y="175" width="56" height="20" uuid="034a9156-0dfb-43b2-aa04-ee5ffad9328b"/>
+				<textElement textAlignment="Right">
+					<font isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{actual_total_income}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.00;-#,##0.00">
+				<reportElement x="475" y="195" width="56" height="20" uuid="9a90dad3-b08e-41dc-98f7-0d457be04a39"/>
+				<textElement textAlignment="Right">
+					<font isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{actual_Expected Total Income}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="139" y="135" width="17" height="20" uuid="add04fed-ba72-48be-b2ea-ab5b940dc97b"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="139" y="195" width="17" height="20" uuid="870b19a2-59ed-4c19-81bc-519e309c8932"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="139" y="175" width="17" height="20" uuid="9348f466-5e48-4a3e-87ac-bbb5a3cc0138"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="139" y="155" width="17" height="20" uuid="d842fc56-0cfa-406a-a512-1f724768d09d"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="458" y="175" width="17" height="20" uuid="3893f752-0073-48df-a413-52bf76816f82"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="458" y="135" width="17" height="20" uuid="194e7f51-4b59-4503-a280-95f635f87f79"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="458" y="155" width="17" height="20" uuid="e9404632-9ba1-4f37-bfa0-d8695626c184"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="458" y="195" width="17" height="20" uuid="5688bf76-6bf6-40d7-ab8a-d1e68b5fd3c1"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="237" width="17" height="20" uuid="ec3f965e-432a-465c-b837-75b90df6ca8e"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="141" y="316" width="16" height="20" uuid="2b3f1c20-4b36-4751-b63f-9e50fadb0449"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[=]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="23" y="316" width="116" height="20" uuid="8925377b-5ff7-4617-97de-f3ae3fab1519"/>
+				<textElement>
+					<font fontName="Cambria" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Final Total Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="156" y="316" width="66" height="20" uuid="96c41def-5842-4c86-be09-8101e9ea8232"/>
+				<textElement>
+					<font fontName="Cambria" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Income]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="236" y="316" width="78" height="20" uuid="496f0a93-6b47-4a92-a7da-1b58d9244148"/>
+				<textElement>
+					<font fontName="Cambria" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Settled Advance Payments]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="222" y="316" width="14" height="20" uuid="cd0b7b9c-85fe-4178-b034-cb03526b4c74"/>
+				<textElement textAlignment="Center">
+					<font fontName="Cambria" isBold="true"/>
+				</textElement>
+				<text><![CDATA[-]]></text>
+			</staticText>
+			<textField evaluationTime="Report" pattern="#,##0.00;-#,##0.00">
+				<reportElement x="156" y="336" width="53" height="20" uuid="a6a51fcd-c45e-4af3-a4ab-2a4e54aed39e"/>
+				<textFieldExpression><![CDATA[$V{actual_total_income}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="209" y="336" width="14" height="20" uuid="5979b155-03de-4be3-ac8c-06d0ba398375"/>
+				<textElement textAlignment="Center">
+					<font fontName="Cambria" isBold="true"/>
+				</textElement>
+				<text><![CDATA[-]]></text>
+			</staticText>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="222" y="336" width="60" height="20" uuid="acb5f893-bfdc-4f59-9ac7-dc9a7333e7b6"/>
+				<textFieldExpression><![CDATA[$F{settle_advance_payments_this_month}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.00;-#,##0.00">
+				<reportElement x="156" y="356" width="100" height="20" uuid="4f0c4701-8fc0-4d26-97a5-b5cc9ccef969"/>
+				<textFieldExpression><![CDATA[$V{Final Amount}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="141" y="336" width="16" height="20" uuid="1b19eedd-1cd4-4a9f-88da-9f73ed7cf8df"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[=]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="141" y="356" width="16" height="20" uuid="40428456-1625-4dd4-952d-691a9929a7b6"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[=]]></text>
+			</staticText>
+			<line>
+				<reportElement x="2" y="379" width="553" height="1" uuid="f66858b5-f47e-4486-8cbb-530363ce3902"/>
+			</line>
+			<staticText>
+				<reportElement x="35" y="101" width="105" height="20" uuid="6d208632-818c-4815-86f1-6e21bab4ec29"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lecturer Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="157" y="101" width="105" height="20" uuid="9da29b47-fae1-4141-8e81-eec811873064"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mr R Chamikara]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="314" y="101" width="105" height="20" uuid="5e98dc22-5c1c-4e28-ad83-01d5560a1c1a"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Month]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="450" y="101" width="105" height="20" uuid="449a9542-b80c-44f9-93ea-7c6a957d6233"/>
+				<textElement textAlignment="Left">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[JUNE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="433" y="101" width="17" height="20" uuid="7f78924b-09e8-4269-85b4-ab5510fe6178"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="141" y="101" width="17" height="20" uuid="afffb201-3993-4f96-b520-9603270d8905"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="94" splitType="Stretch">
+			<textField>
+				<reportElement x="314" y="10" width="100" height="20" uuid="03256ff1-3966-4a83-a5e5-25664ea046b1"/>
+				<textFieldExpression><![CDATA[$F{fee_for_this_month}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="120" y="10" width="137" height="20" uuid="843328be-adab-4339-881f-6d424f2ef02a"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Payments For current Month]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="314" y="30" width="100" height="20" uuid="dbc8561f-e0c6-4070-a217-925a14f437da"/>
+				<textFieldExpression><![CDATA[$F{fee_from_past_month}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="120" y="30" width="137" height="20" uuid="1a584f0f-6231-4e9c-9d24-a92fdf70aacd"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Payments From Past Months]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="314" y="50" width="100" height="20" uuid="c226c055-707d-46fb-8e6b-ae75ba492d55"/>
+				<textFieldExpression><![CDATA[$F{total_income}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="120" y="50" width="137" height="20" uuid="4f3c2dae-cc81-484a-9a33-437e5ee6cb92"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Total Amount]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="314" y="70" width="100" height="20" uuid="77616c5a-8777-40da-b961-e203b69c8b9d"/>
+				<textFieldExpression><![CDATA[$F{expected_income}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="66" y="70" width="191" height="20" uuid="f9b391f2-9e52-406d-9a11-216cfa2bb4e7"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Expected Amount For Current Month]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="272" y="10" width="26" height="20" uuid="93844cf2-4d92-4a0d-a4bb-cd752af7b081"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[=]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="272" y="30" width="26" height="20" uuid="c91ab3f8-903c-4c80-96ff-9750e8f77c1f"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[=]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="272" y="50" width="26" height="20" uuid="522fb470-334d-402b-89c4-5f6ecf1bc6c2"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[=]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="272" y="70" width="26" height="20" uuid="81161954-1a06-40d8-8709-ed82c9b7a9df"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[=]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

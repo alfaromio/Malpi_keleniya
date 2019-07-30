@@ -1,0 +1,76 @@
+add extra column in payment table
+
+column name -  card_type
+
+-----------------------------------------------all queries-----
+
+2018-04-08 by malinda
+ALTER TABLE  `student` ADD  `S_ADDRESS2` VARCHAR( 2000 ) NOT NULL AFTER  `S_ADDRESS` ;
+ALTER TABLE  `student` ADD  `S_ADDRESS3` VARCHAR( 2000 ) NOT NULL AFTER  `S_ADDRESS2` ;
+
+2018-04-15 by malinda
+ALTER TABLE  `student` ADD  `landline_number` VARCHAR( 20 ) NOT NULL AFTER  `S_PARENT_CONTACT_NO` ;
+
+---------------------------------------------------------Only for LocalDB-------------------------------------------
+ALTER TABLE  `admission` ADD  `Online_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO';
+ALTER TABLE  `advance_payments` ADD  `Online_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO';
+ALTER TABLE  `attendence` ADD  `Online_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO';
+ALTER TABLE  `course` ADD  `Online_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO';
+ALTER TABLE  `courses_dates` ADD  `Online_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO';
+ALTER TABLE  `expences` ADD  `Online_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO';
+ALTER TABLE  `expences_types` ADD  `Online_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO';
+ALTER TABLE  `extraclasses` ADD  `Online_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO';
+ALTER TABLE  `lecturer` ADD  `Online_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO';
+ALTER TABLE  `lecturer_payments` ADD  `Online_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO';
+ALTER TABLE  `page_details` ADD  `Online_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO';
+ALTER TABLE  `payments` ADD  `Online_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO';
+ALTER TABLE  `privileges` ADD  `Online_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO';
+ALTER TABLE  `school` ADD  `Online_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO';
+ALTER TABLE  `student` ADD  `Online_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO';
+ALTER TABLE  `student-course` ADD  `Online_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO';
+ALTER TABLE  `subject` ADD  `Online_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO';
+ALTER TABLE  `sys_users` ADD  `Online_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO'; 
+ALTER TABLE  `user_role` ADD  `Online_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO'; 
+------------------------------------------------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------Only for Remort-------------------------------------------
+ALTER TABLE  `attendence` ADD  `Backend_Sync` VARCHAR( 5 ) NOT NULL DEFAULT  'NO';
+
+
+-----------------------------------------------------------------------------------------------------
+
+
+ALTER TABLE  `admission` ADD  `id` INT NOT NULL AUTO_INCREMENT FIRST ,
+ADD PRIMARY KEY (  `id` ) ;
+
+
+ALTER TABLE  `privileges` DROP FOREIGN KEY  `role_id_FK` ;
+ALTER TABLE  `privileges` DROP FOREIGN KEY  `page_if_fk` ;
+
+CREATE TABLE IF NOT EXISTS `payment_bill_details` (
+  `line_id` int(11) NOT NULL AUTO_INCREMENT,
+  `bill_id` varchar(100) NOT NULL,
+  `course_id` varchar(150) NOT NULL,
+  `bill_amount` double NOT NULL,
+  `payment_month` varchar(100) NOT NULL,
+  `comments` varchar(150) NOT NULL,
+  `s_id` int(11) NOT NULL,
+  `card_type` int(11) NOT NULL,
+  `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`line_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+CREATE TABLE IF NOT EXISTS `class_conduct_details` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `course_id` varchar(200) NOT NULL,
+  `start_time` varchar(50) NOT NULL,
+  `end_time` varchar(50) NOT NULL,
+  `date` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+ALTER TABLE  `payment_bill_details` ADD  `issued_by` VARCHAR( 50 ) NOT NULL ;
+
+ALTER TABLE  `payment_bill_details` CHANGE  `card_type`  `card_type` VARCHAR( 30 ) NOT NULL ;

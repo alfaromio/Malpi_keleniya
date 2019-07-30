@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="LecturerDetails" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="77002466-29d8-475a-91f6-873179f2328d">
+	<property name="ireport.zoom" value="1.0000000000000016"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[select * from course]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="100" y="34" width="355" height="45" forecolor="#0000FF" uuid="486b07bb-6ba9-4dea-af33-a63b9d5535d8"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Lecturer Details Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="127">
+			<staticText>
+				<reportElement x="296" y="23" width="100" height="20" uuid="848fd408-1d12-41a0-b70a-079aecf2e098"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Lecturer NIC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="43" width="100" height="20" uuid="c9fe1c60-076b-49d9-ab4c-ac4750a4c4b7"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Lecturer ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="296" y="43" width="100" height="20" uuid="b9df8f4f-81d4-4fe9-820b-7b1b5a70f037"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Lecturer Email]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="23" width="100" height="20" uuid="aa9bf640-e383-4383-99d8-7a1d90adc28f"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Lecturer Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="63" width="100" height="20" uuid="7cc124ca-e14c-4f71-a5e6-da8eba5297bc"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Lecturer Contact]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="107" width="81" height="20" uuid="6aa631a7-cc43-4368-a3d0-cbaabdbe93b8"/>
+				<text><![CDATA[Lecturer Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="107" width="100" height="20" uuid="9ba322e6-dc68-4cec-bc79-0d9f0b4c7ef2"/>
+				<text><![CDATA[Course ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="218" y="107" width="100" height="20" uuid="291bfb84-07c3-4012-b19b-7a537b882351"/>
+				<text><![CDATA[Subject]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="455" y="107" width="100" height="20" uuid="abae94a3-4af1-4acc-878c-4c5113299655"/>
+				<text><![CDATA[Monthly Fee]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="334" y="107" width="100" height="20" uuid="d8e448eb-61a2-48b8-9dec-b5ff1d062a34"/>
+				<text><![CDATA[Grade]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

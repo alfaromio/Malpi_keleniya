@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="AttendanceReport" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f66a18bf-0077-4c39-baf5-8661d4ed8e19">
+	<property name="ireport.zoom" value="1.2100000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="c_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="s_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fromDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="toDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="s_name" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT attendence.*,(select student.s_firstname from student where student.s_id = attendence.s_id) as name
+FROM  `attendence`
+WHERE c_id =  $P{c_id}
+AND s_id =$P{s_id} And
+(completedate between STR_TO_DATE($P{fromDate}, '%Y-%m-%d') and STR_TO_DATE($P{toDate}, '%Y-%m-%d')) order by completeDate DESC]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="s_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="c_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="year" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="month" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="date" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="day" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="time" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="attendence" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="completeDate" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="attendance" class="java.lang.String" resetType="Column">
+		<variableExpression><![CDATA[($F{attendence}==true ? 'Attend' : 'Not Attend')]]></variableExpression>
+	</variable>
+	<variable name="time" class="java.lang.String" resetType="Column">
+		<variableExpression><![CDATA[$V{attendance}=='Attend' ? $F{time} :'--']]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="184" splitType="Stretch">
+			<staticText>
+				<reportElement x="-1" y="85" width="555" height="36" forecolor="#0000FF" uuid="e01c94f6-b9da-412e-a6f2-8e2e6395f2c4"/>
+				<textElement textAlignment="Center">
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Student Attendance Report]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="132" width="78" height="20" uuid="dc57d52b-4aeb-4a66-b682-23ba005aa9f6"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Student Name ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="151" width="78" height="20" uuid="1e3e92fe-ff8f-4912-a8c9-5e2fbb04d5eb"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Course ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="401" y="132" width="38" height="20" uuid="ee37154c-7f37-402b-a29c-903d4a2f1e97"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[From ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="401" y="151" width="38" height="20" uuid="5a4d7d58-84d7-433f-83bd-367870e54887"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[To ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="91" y="132" width="283" height="20" uuid="7574feea-006b-4f64-bf80-2d4227fd045d"/>
+				<textFieldExpression><![CDATA[$P{s_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="91" y="151" width="283" height="20" uuid="ad21c5ce-9259-4090-9cb4-a86634b8ca05"/>
+				<textFieldExpression><![CDATA[$F{c_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="454" y="131" width="100" height="20" uuid="de543048-6056-4335-b3c6-11c8310b84aa"/>
+				<textFieldExpression><![CDATA[$P{toDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="454" y="151" width="100" height="20" uuid="ff263ed6-1a99-43ec-9bf7-9bd27bda2104"/>
+				<textFieldExpression><![CDATA[$P{fromDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="78" y="132" width="13" height="20" uuid="c163bc7a-82a3-4cba-86f4-8fcf799267f1"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="78" y="151" width="13" height="20" uuid="5f710d17-7d95-44d6-b030-a5d9d18e65ac"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="439" y="151" width="13" height="20" uuid="3a4a20a6-24d7-4fbf-a809-f01ff0f1044e"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="439" y="132" width="13" height="20" uuid="9b1291e0-4923-449b-9574-549e60a3f99a"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="374" y="40" width="179" height="20" uuid="61df26ee-ec8e-4615-9850-1e329d3541af"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ipssrilanka1@gmail.com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="374" y="20" width="179" height="20" uuid="0114e91f-4ec0-49ca-b0a2-43b6d966c242"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[+940112727263 / + 940112718162]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="374" y="0" width="179" height="20" uuid="57b15e44-8df3-466b-acd2-e38e2f7b7170"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[4/1/A , Broadway, Kawdana, Dehiwala]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="109" y="20" width="100" height="20" forecolor="#0033CC" uuid="9066fc85-ba80-441f-a24f-dfb27c59ab2d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mount Lavinia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="109" y="0" width="239" height="20" forecolor="#0033CC" uuid="b7233acf-106e-4778-aa6e-7b0607e5b221"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INSTITUTE OF PROFESSIONAL STUDIES]]></text>
+			</staticText>
+			<image>
+				<reportElement x="-1" y="0" width="110" height="70" uuid="81a78c27-8d8a-4ca8-a758-9aa7f5e71646"/>
+				<imageExpression><![CDATA["ipslogo.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="26" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="45" height="20" uuid="fd1c2cf8-9c84-45fd-a9ec-47e34173a720"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Student ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="146" y="1" width="196" height="20" uuid="a0d1686a-60ee-4070-9767-4fd761324f30"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Course ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="343" y="1" width="73" height="20" uuid="76ab5927-6f63-4ee7-9176-ac093a06e7c3"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="418" y="1" width="53" height="20" uuid="cffe1236-bca3-4a8f-86f9-57e1c3a4defc"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Time]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="20" width="555" height="1" uuid="6693de18-ce29-4e52-9862-60ea88db0933"/>
+			</line>
+			<staticText>
+				<reportElement x="477" y="0" width="77" height="20" uuid="c9a4c108-ed9f-48ee-93df-39d938abea59"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="45" y="0" width="100" height="20" uuid="8463af8b-afc8-4d44-a285-875b0dba0c6e"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[name]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="29" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="45" height="20" uuid="82bc94b0-ac35-4280-824d-b02b777b6b7b"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{s_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="146" y="0" width="196" height="20" uuid="ef395392-39be-4210-9997-d39f24f1e330"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{c_id}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MMM-yy">
+				<reportElement x="343" y="0" width="73" height="20" uuid="606ff2a3-d3e7-4858-b2d7-dbb97681d5aa"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{completeDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="477" y="0" width="77" height="20" uuid="df372cb2-55a8-4346-83e9-a1a8cc6f1f87"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{attendance}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h.mm a">
+				<reportElement x="418" y="0" width="59" height="20" uuid="6c80065c-b67a-40f6-9611-88d642f1ce97"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{time}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="46" y="0" width="100" height="20" uuid="026cc0d7-3733-4b4b-984a-f97ddb79676f"/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

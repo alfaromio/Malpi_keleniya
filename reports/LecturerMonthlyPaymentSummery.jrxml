@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="LecturerMonthlyPaymentSummery" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f6577d81-d9d6-4b23-b8ca-c1f7cf89fb82">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="payment_issue_month" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="year" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="payment_issue_year" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LecturerName" class="java.lang.String"/>
+	<parameter name="month" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="precentage" class="java.math.BigDecimal"/>
+	<parameter name="course_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="amount" class="java.math.BigDecimal"/>
+	<parameter name="lecturerIncome" class="java.lang.String"/>
+	<parameter name="course_fee" class="java.lang.Double"/>
+	<queryString>
+		<![CDATA[SELECT ps.*,cs.monthly_fee,s_name,st_cs.cardType
+FROM payments ps,course cs ,student st,`student-course` st_cs
+WHERE ps.course_id = $P{course_id} and ps.course_id = cs.course_id and ps.s_id = st.s_id and
+st_cs.course_id=ps.course_id and st_cs.s_id = ps.s_id
+AND payment_issue_year =  $P{payment_issue_year}
+AND payment_issue_month =  $P{payment_issue_month}
+and month = $P{payment_issue_month}
+and year = $P{payment_issue_year}]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="s_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="course_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="year" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="month" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="date" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="amount" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="paid_to_lecture" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="payment_issue_date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="payment_issue_month" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="payment_issue_year" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="monthly_fee" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="s_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cardType" class="java.lang.Integer">
+		<fieldDescription><![CDATA[0 -free card,1 -50% free,2 - normal card]]></fieldDescription>
+	</field>
+	<variable name="lecturerIncome" class="java.lang.Double">
+		<variableExpression><![CDATA[($P{amount}.multiply($P{precentage})).divide(new BigDecimal(100))]]></variableExpression>
+	</variable>
+	<variable name="sumLatePayments" class="java.math.BigDecimal" resetType="None"/>
+	<variable name="totalCurrentMonthPayments" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new BigDecimal($F{amount})]]></variableExpression>
+	</variable>
+	<variable name="totalIncome" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$V{totalCurrentMonthPayments}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<group name="courseGroup">
+		<groupExpression><![CDATA[$F{course_id}]]></groupExpression>
+		<groupFooter>
+			<band height="80">
+				<staticText>
+					<reportElement x="294" y="9" width="159" height="20" uuid="edc43773-6657-40bf-9555-c953aa4c1155"/>
+					<textElement>
+						<font size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Current Month Payments]]></text>
+				</staticText>
+				<textField evaluationTime="Report">
+					<reportElement x="497" y="9" width="58" height="20" uuid="db05ad2a-8262-4a77-b9be-1f021201df8e"/>
+					<textElement textAlignment="Right">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totalCurrentMonthPayments}==null?0.00:$V{totalCurrentMonthPayments}]]></textFieldExpression>
+				</textField>
+				<subreport>
+					<reportElement x="0" y="33" width="555" height="39" isRemoveLineWhenBlank="true" uuid="be1fa772-d291-45be-a09f-439ba556b3be"/>
+					<subreportParameter name="SUBREPORT_DIR">
+						<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="LecturerName">
+						<subreportParameterExpression><![CDATA[$P{LecturerName}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="payment_issue_year">
+						<subreportParameterExpression><![CDATA[$P{payment_issue_year}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="lecturerIncome">
+						<subreportParameterExpression><![CDATA[$P{lecturerIncome}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="precentage">
+						<subreportParameterExpression><![CDATA[$P{precentage}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="month">
+						<subreportParameterExpression><![CDATA[$P{month}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="year">
+						<subreportParameterExpression><![CDATA[$P{year}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="course_id">
+						<subreportParameterExpression><![CDATA[$P{course_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="course_fee">
+						<subreportParameterExpression><![CDATA[$P{course_fee}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="payment_issue_month">
+						<subreportParameterExpression><![CDATA[$P{payment_issue_month}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<returnValue subreportVariable="sumLatePayments" toVariable="sumLatePayments"/>
+					<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "lecturerMonthlyLatePayments.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="229" splitType="Stretch">
+			<staticText>
+				<reportElement x="109" y="0" width="239" height="20" forecolor="#0033CC" uuid="a8e86ccb-9542-42ef-81f5-dbaba93fc78a"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INSTITUTE OF PROFESSIONAL STUDIES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="376" y="20" width="179" height="20" uuid="6466c43e-82b2-43d9-a2e7-76400ad98a8b"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[+940112727263 / + 940112718162]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="376" y="40" width="179" height="20" uuid="c4bc36f3-ccbb-460d-b67e-cd06f059f0b6"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ipssrilanka1@gmail.com]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="109" height="72" uuid="c0440184-6d13-4e94-9c3f-d3936e520216"/>
+				<imageExpression><![CDATA["ipslogo.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="376" y="0" width="179" height="20" uuid="380b6e57-ab36-4c8d-b299-f72d7d4eeff9"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[4/1/A , Broadway, Kawdana, Dehiwala]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="109" y="20" width="100" height="20" forecolor="#0033CC" uuid="7171d9b0-fa1a-4ea0-977f-dde01115bb9c"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mount Lavinia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="72" width="555" height="45" forecolor="#0033FF" uuid="ad8a7321-fb11-4313-9793-42446c896a74"/>
+				<textElement textAlignment="Center">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lecturer Monthly Income Report]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="137" width="85" height="20" uuid="f811715d-001e-410d-b4a5-4a85f6e12c30"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Course ID           :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="331" y="117" width="100" height="20" uuid="b0eeab5f-b8e8-40f7-87ee-99c3ea370b8e"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payment Month :  ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="90" y="117" width="231" height="20" uuid="171f194b-bed7-4cbb-a092-51d1eaabe0a0"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{LecturerName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="431" y="157" width="22" height="20" uuid="fcd7fb90-a303-4c10-95f8-ed4c4d624820"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{precentage}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="117" width="85" height="20" uuid="ab531c8d-56c7-4888-9c2f-f8b36a032e82"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lecturer Name   :         ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="453" y="157" width="8" height="20" uuid="fb5ff776-dbf7-4ae9-b9c5-e6067a0b889d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[%]]></text>
+			</staticText>
+			<textField pattern="yyyy.MMMMM.dd GGG hh:mm aaa">
+				<reportElement x="431" y="137" width="114" height="20" uuid="cdbb2c25-46ed-4a26-ae73-46671f3f5e6b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="331" y="157" width="100" height="20" uuid="256b244a-4897-4497-b1f6-b2b0c9bfa08e"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Precentage  :  ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="331" y="137" width="100" height="20" uuid="8926de65-975d-4ac9-9bb5-864abab9e1b6"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Genarated Date :  ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="331" y="177" width="100" height="20" uuid="4209dc07-bad2-41ee-8cf4-5d85109d5f20"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Income  :  ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="90" y="137" width="231" height="20" uuid="ec201948-4a59-4437-97a6-a09ef9c22b03"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{course_id}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="431" y="177" width="100" height="20" uuid="3bf68d03-19fb-4633-b58d-97b5afdf3544"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{lecturerIncome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="431" y="117" width="100" height="20" uuid="de5d960f-b0ce-4fda-8059-2c64afaa04eb"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{payment_issue_month}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="157" width="85" height="20" uuid="e9277cc9-e240-4f69-876f-565d1e2ce63d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Course Fee        :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="177" width="85" height="20" uuid="eb30cb73-a6f0-4db1-9b59-810a2833cd15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payment month :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="90" y="-90" width="80" height="20" uuid="8816731f-f06a-4da9-acdf-14684f250433"/>
+				<textFieldExpression><![CDATA[$F{month}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="197" width="85" height="20" uuid="9a3571bf-2845-4bd0-8d74-c6a919f16910"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payment Year    :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="90" y="197" width="100" height="20" uuid="b4b8af42-75b8-49cf-bec8-51cbcf145a22"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{payment_issue_year}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="90" y="177" width="100" height="20" uuid="c7ccc1bc-7058-4574-948b-43a0ebc4d2a3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{payment_issue_month}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="90" y="157" width="100" height="20" uuid="4a187bbf-5c4c-4458-bcfc-1fe2ab7a2882"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{amount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="38" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="14" width="57" height="20" uuid="9b0984de-b125-4319-a924-bcb6be74e932"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Student Id]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="376" y="14" width="70" height="20" uuid="92cfe987-0faf-4b21-8cab-e97bab9c8225"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payment Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="90" y="14" width="119" height="20" uuid="f4b5f52a-9405-4b9d-a55c-208c3ed35d3e"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Student Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="248" y="14" width="100" height="20" uuid="3b17f85b-7ec3-4679-be46-e09bd5ead5f6"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Card Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="453" y="14" width="100" height="20" uuid="31d409ad-5998-4d3c-b9eb-f591417ae4df"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payment Amount]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="57" height="20" uuid="0905b847-6bf1-4a39-a2dd-d75b10dbfb33"/>
+				<textFieldExpression><![CDATA[$F{s_id}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MMM-yy">
+				<reportElement x="388" y="0" width="58" height="20" uuid="3f6e256f-5a50-45eb-8c39-48ee6458a092"/>
+				<textFieldExpression><![CDATA[$F{payment_issue_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="90" y="0" width="119" height="20" uuid="ae1c5167-3001-4989-b78d-783ed4f34c5c"/>
+				<textFieldExpression><![CDATA[$F{s_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="262" y="0" width="100" height="20" uuid="e935c91d-a333-4aff-9570-f7ed762c1ac8"/>
+				<textFieldExpression><![CDATA[$F{cardType}==2 ? "Normal Card" :$F{cardType}==1?"Half Card":"Free Card"]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="455" y="0" width="100" height="20" uuid="1a28e9f6-052a-47d6-bf3e-bb31d6852db9"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="64" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
